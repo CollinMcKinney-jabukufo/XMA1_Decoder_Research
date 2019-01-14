@@ -1,0 +1,40 @@
+﻿namespace Jabukufo.Audio.Structures.WAV
+{
+    /// <summary>
+    /// Speaker positions used in the <see cref="WAVEFORMATEXTENSIBLE.dwChannelMask"/> field.
+    /// Indicates which audio channels map to which speakers.
+    /// <see href="https://github.com/hrydgard/minidx9/blob/master/Include/audiodefs.h#L217-L258">HERE</see>
+    /// </summary>
+    public enum ChannelMask : uint
+    {
+        SPEAKER_FRONT_LEFT              = (1 << 00),
+        SPEAKER_FRONT_RIGHT             = (1 << 01),
+        SPEAKER_FRONT_CENTER            = (1 << 02),
+        SPEAKER_LOW_FREQUENCY           = (1 << 03),
+        SPEAKER_BACK_LEFT               = (1 << 04),
+        SPEAKER_BACK_RIGHT              = (1 << 05),
+        SPEAKER_FRONT_LEFT_OF_CENTER    = (1 << 06),
+        SPEAKER_FRONT_RIGHT_OF_CENTER   = (1 << 07),
+        SPEAKER_BACK_CENTER             = (1 << 08),
+        SPEAKER_SIDE_LEFT               = (1 << 09),
+        SPEAKER_SIDE_RIGHT              = (1 << 10),
+        SPEAKER_TOP_CENTER              = (1 << 11),
+        SPEAKER_TOP_FRONT_LEFT          = (1 << 12),
+        SPEAKER_TOP_FRONT_CENTER        = (1 << 13),
+        SPEAKER_TOP_FRONT_RIGHT         = (1 << 14),
+        SPEAKER_TOP_BACK_LEFT           = (1 << 15),
+        SPEAKER_TOP_BACK_CENTER         = (1 << 16),
+        SPEAKER_TOP_BACK_RIGHT          = (1 << 17),
+
+        SPEAKER_MONO              = (SPEAKER_FRONT_CENTER),
+        SPEAKER_STEREO            = (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT),
+        SPEAKER_2POINT1           = (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_LOW_FREQUENCY),
+        SPEAKER_SURROUND          = (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_BACK_CENTER),
+        SPEAKER_QUAD              = (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT),
+        SPEAKER_4POINT1           = (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_LOW_FREQUENCY | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT),
+        SPEAKER_5POINT1           = (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT),
+        SPEAKER_7POINT1           = (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT | SPEAKER_FRONT_LEFT_OF_CENTER | SPEAKER_FRONT_RIGHT_OF_CENTER),
+        SPEAKER_5POINT1_SURROUND  = (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | SPEAKER_SIDE_LEFT | SPEAKER_SIDE_RIGHT),
+        SPEAKER_7POINT1_SURROUND  = (SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT | SPEAKER_FRONT_CENTER | SPEAKER_LOW_FREQUENCY | SPEAKER_BACK_LEFT | SPEAKER_BACK_RIGHT | SPEAKER_SIDE_LEFT  | SPEAKER_SIDE_RIGHT),
+    }
+}

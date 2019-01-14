@@ -1,0 +1,74 @@
+﻿using Jabukufo.Bits;
+using Jabukufo.Common;
+using System.Diagnostics;
+
+namespace Jabukufo.Audio.Structures.XMA
+{
+    /// <summary>
+    /// 'seek' chunk: A seek table to help navigate the XMA data.
+    /// </summary>
+    public class CHUNK_Seek
+    {
+        public static readonly FourCC Tag = new FourCC("seek");
+        public CHUNK_HEADER Header;
+
+        /// <summary>
+        /// Number of interleaved audio streams.
+        /// </summary>
+        public int NumStreams;
+
+        /// <summary>
+        /// The length of <see cref="BlockTable"/>.
+        /// </summary>
+        public int BlockTableLength;
+
+        /// <summary>
+        /// <para>
+        /// Entries here tell the amount of PCM samples in all previous "blocks". The amount of PCM samples in <see cref="BlockTable"/>[n]
+        /// can be calculated as: (<see cref="BlockTable"/>[n + 1] - <see cref="BlockTable"/>[n]).
+        /// </para>
+        /// <para>
+        /// The <see cref="XMAFRAME"/> count in <see cref="BlockTable"/>[n] can be calculated as: 
+        /// (<see cref="BlockTable"/>[n + 1] - <see cref="BlockTable"/>[n]) / <see cref="Constants.XMA_SAMPLES_PER_FRAME"/>.
+        /// </para>
+        /// <para>
+        /// The <see cref="XMASUBFRAME"/> count in <see cref="BlockTable"/>[n] can be calculated as: 
+        /// (<see cref="BlockTable"/>[n + 1] - <see cref="BlockTable"/>[n]) / <see cref="Constants.XMA_SAMPLES_PER_SUBFRAME"/>.
+        /// </para>
+        /// <para>
+        /// TODO: Figure out how to find the amount of samples for <see cref="BlockTable"/>[<see cref="BlockTable"/>.Length - 1].
+        /// </para>
+        /// </summary>
+        public int[] BlockTable;
+
+        public CHUNK_Seek(BitStream xmaStream, XMAFILE xmaFile)
+        {
+            Debug.WriteLine(typeof(CHUNK_Seek).FullName);
+            Debug.Indent();
+
+            this.Header = new CHUNK_HEADER(xmaStream, CHUNK_Seek.Tag);
+
+            this.NumStreams = xmaStream.ReadValue<int>();
+            Debug.WriteLine($"{nameof(NumStreams)}: {NumStreams}");
+
+            this.BlockTableLength = xmaStream.ReadValue<int>();
+            Debug.WriteLine($"{nameof(BlockTableLength)}: {BlockTableLength}");
+
+            Debug.WriteLine($"BlockSize: {xmaFile.DataSubchunk.Header.ChunkSize / this.BlockTableLength}");
+            Assert.Debug(xmaFile.DataSubchunk.Header.ChunkSize % this.BlockTableLength == 0);
+
+            this.BlockTable = new int[this.BlockTableLength];
+            Debug.WriteLine(nameof(this.BlockTable));
+            Debug.Indent();
+            for (var i = 0; i < this.BlockTable.Length; i++)
+            {
+                this.BlockTable[i] = xmaStream.ReadValue<int>();
+                Debug.WriteLine($"[{i.ToString().PadLeft(this.BlockTableLength.ToString().Length, '0')}]: {this.BlockTable[i]}");
+                Assert.Debug(this.BlockTable[i] % Constants.XMA_SAMPLES_PER_FRAME == 0);
+            }
+            Debug.Unindent();
+
+            Debug.Unindent();
+        }
+    }
+}
