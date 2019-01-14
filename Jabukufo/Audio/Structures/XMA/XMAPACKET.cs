@@ -78,10 +78,13 @@ namespace Jabukufo.Audio.Structures.XMA
             var xmaFrames = new List<XMAFRAME> { };
             xmaStream.BitOffset = this.BitOffset + this.FrameOffsetInBits;
 
-            //for (var f = 0; xmaStream.BitOffset < this.BitOffset + Constants.XMA_BITS_PER_PACKET; f++)
+            for (var f = 0; xmaStream.BitOffset < this.BitOffset + Constants.XMA_BITS_PER_PACKET; f++)
             {
                 Debug.Write($"{nameof(this.XMAFrames)}[{0}]");
                 var frame = new XMAFRAME(xmaStream, xmaFile);
+                if (frame.FrameLength == 0)
+                    break;
+
                 xmaFrames.Add(frame);
             }
             this.XMAFrames = xmaFrames.ToArray();

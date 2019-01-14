@@ -71,6 +71,14 @@ namespace Jabukufo.Audio.Structures.XMA
                 this.XMAStreams[s].XMAPackets.Add(packet);
                 skipCount = packet.PacketSkipCount;
             }
+
+            for (var p = 0; p < this.XMAStreams[s].XMAPackets.Count; p++)
+            {
+                for (var f = 0; f < this.XMAStreams[s].XMAPackets[p].XMAFrames.Length; f++)
+                {
+
+                }
+            }
         }
     }
 }

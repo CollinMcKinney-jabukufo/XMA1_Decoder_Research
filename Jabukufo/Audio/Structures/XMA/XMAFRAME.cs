@@ -59,6 +59,12 @@ namespace Jabukufo.Audio.Structures.XMA
             if (this.FrameLength == XMA_FINAL_FRAME_MARKER)
                 return;
 
+            var frameData = xmaStream.ReadBytes(this.FrameLength);
+            var tempBits = new BitContext(frameData);
+
+            var underflow = BitMath.CalcUnderflow<byte>(this.FrameLength);
+            this.FrameData = tempBits.GetBits(underflow, this.FrameLength);
+
             xmaStream.BitOffset = this.BitOffset + this.FrameLength;
             Debug.Unindent();
         }

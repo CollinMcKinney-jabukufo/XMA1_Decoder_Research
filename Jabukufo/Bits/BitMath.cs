@@ -48,13 +48,13 @@ namespace Jabukufo.Bits
         /// Calculates how many additional bits are needed to align to type 'T'.
         /// </summary>
         public static int CalcUnderflow<T>(int bitCount) where T : unmanaged
-            => BitMath.SizeOf<T>() - bitCount;
+            => (BitMath.RoundBitsUp<T>(bitCount) * BitMath.SizeOf<T>()) - bitCount;
 
         /// <summary>
         /// Calculates how many additional bits are needed to align to type 'T'.
         /// </summary>
         public static int CalcOverflow<T>(int bitCount) where T : unmanaged
-            => bitCount % BitMath.SizeOf<T>();
+            => bitCount - (BitMath.RoundBitsDown<T>(bitCount) * BitMath.SizeOf<T>());
 
         /// <summary>
         /// Reverses the order of bits within a single byte.
