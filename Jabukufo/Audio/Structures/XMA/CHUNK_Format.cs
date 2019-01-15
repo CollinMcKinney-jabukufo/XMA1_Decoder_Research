@@ -15,14 +15,14 @@ namespace Jabukufo.Audio.Structures.XMA
 
         public XMAWAVEFORMAT XMAWAVEFormat;
 
-        public CHUNK_Format(BitContext metaContext, XMAFILE xmaFile)
+        public CHUNK_Format(BitStream metaStream, XMAFILE xmaFile)
         {
             Debug.WriteLine(typeof(CHUNK_Format).FullName);
             Debug.Indent();
 
-            this.Header = new CHUNK_HEADER(metaContext, CHUNK_Format.Tag);
+            this.Header = new CHUNK_HEADER(metaStream, CHUNK_Format.Tag);
 
-            this.XMAWAVEFormat = new XMAWAVEFORMAT(metaContext);
+            this.XMAWAVEFormat = new XMAWAVEFORMAT(metaStream);
 
             Debug.Unindent();
         }

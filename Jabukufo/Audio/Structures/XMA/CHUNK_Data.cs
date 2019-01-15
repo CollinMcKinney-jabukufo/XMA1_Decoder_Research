@@ -15,20 +15,21 @@ namespace Jabukufo.Audio.Structures.XMA
         /// <summary>
         /// The actual sound data.
         /// </summary>
-        public BitContext XMAContext;
+        public BitStream XMADataStream;
 
-        public CHUNK_Data(BitContext metaContext, XMAFILE xmaFile)
+        public CHUNK_Data(BitStream metaStream, XMAFILE xmaFile)
         {
             Debug.WriteLine(typeof(CHUNK_Data).FullName);
             Debug.Indent();
 
-            this.Header = new CHUNK_HEADER(metaContext, CHUNK_Data.Tag);
+            this.Header = new CHUNK_HEADER(metaStream, CHUNK_Data.Tag);
 
             var packetModulus = this.Header.ChunkSize % Constants.XMA_BYTES_PER_PACKET;
             Assert.Debug(packetModulus == 0);
 
             var bitLength = BitMath.BitCount(this.Header.ChunkSize);
-            this.XMAContext = metaContext.GetBits(bitLength, false);
+            var xmaData = metaStream.ReadBytes(bitLength);
+            this.XMADataStream = new BitStream(xmaData);
 
             Debug.Unindent();
         }

@@ -16,23 +16,23 @@ namespace Jabukufo.Audio.Structures.XMA
         /// <summary>
         /// Number of XMA frames that begin in this packet. 6-bits.
         /// </summary>
-        public byte FrameCount;
+        public int FrameCount;
 
         /// <summary>
         /// Bit of XmaData where the first complete frame begins. 15-bits.
         /// </summary>
-        public ushort FrameOffsetInBits;
+        public int FrameOffsetInBits;
 
         /// <summary>
         ///  Metadata stored in the packet (always 1 for XMA2). 3-bits.
         /// </summary>
-        public byte PacketMetaData;
+        public int PacketMetaData;
 
         /// <summary>
         /// How many packets belonging to other streams must be skipped to find the next packet belonging to the same
         /// stream as this one. 8-bits.
         /// </summary>
-        public byte PacketSkipCount;
+        public int PacketSkipCount;
 
         /// <summary>
         /// XMA encoded data.
@@ -45,7 +45,7 @@ namespace Jabukufo.Audio.Structures.XMA
             Debug.Indent();
 
             var packetContext = blockContext.GetBits(Constants.XMA_BITS_PER_PACKET, false);
-            var packetHeader = packetContext.ReadValue<uint>(Endianness.BE);
+            var packetHeader = packetContext.ReadValue<int>(Endianness.LE_MSB);
 
             // E.g. if the first DWORD of a packet is 0x30107902:
             //
@@ -54,17 +54,17 @@ namespace Jabukufo.Audio.Structures.XMA
             //    |          |         |___________ XMA signature (always 000)
             //    |          |_____________________ First frame starts 527 bits into packet
             //    |________________________________ Packet contains 12 frames
-            this.FrameCount         = (byte)((packetHeader & 0b111111_000000000000000_000_00000000) >> 26);
+            this.FrameCount         = (packetHeader >> 26) & 0b111111;
             Debug.WriteLine($"FrameCount: {this.FrameCount}");
 
-            this.FrameOffsetInBits  = (byte)((packetHeader & 0b000000_111111111111111_000_00000000) >> 11);
+            this.FrameOffsetInBits  = (packetHeader >> 11) & 0b111111111111111;
             Debug.WriteLine($"FrameOffsetInBits: {this.FrameOffsetInBits}");
 
-            this.PacketMetaData     = (byte)((packetHeader & 0b000000_000000000000000_111_00000000) >> 08);
+            this.PacketMetaData     = (packetHeader >> 08) & 0b111;
             Debug.WriteLine($"PacketMetaData: {this.PacketMetaData}");
             Assert.Debug(this.PacketMetaData == 0);
 
-            this.PacketSkipCount    = (byte)((packetHeader & 0b000000_000000000000000_000_11111111) >> 00);
+            this.PacketSkipCount    = (packetHeader >> 00) & 0b11111111;
             Debug.WriteLine($"PacketSkipCount: {this.PacketSkipCount}");
 
             /// TODO: Figure out what's wrong with this `FrameOffsetInBits` offset. Current code assumes offset to be relative to the

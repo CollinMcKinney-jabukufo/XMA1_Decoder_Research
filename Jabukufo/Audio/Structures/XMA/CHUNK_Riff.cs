@@ -15,14 +15,14 @@ namespace Jabukufo.Audio.Structures.XMA
         /// </summary>
         public FourCC Format;
 
-        public CHUNK_Riff(BitContext metaContext, XMAFILE xmaFile)
+        public CHUNK_Riff(BitStream metaStream, XMAFILE xmaFile)
         {
             Debug.WriteLine(typeof(CHUNK_Riff).FullName);
             Debug.Indent();
 
-            this.Header = new CHUNK_HEADER(metaContext, CHUNK_Riff.Tag);
+            this.Header = new CHUNK_HEADER(metaStream, CHUNK_Riff.Tag);
 
-            this.Format = metaContext.ReadValue<FourCC>(Endianness.BE);
+            this.Format = metaStream.ReadValue<FourCC>(Endianness.BE);
             Debug.WriteLine($"{nameof(Format)}: {Format}");
             Assert.Debug(this.Format == CHUNK_Riff.FormatTag);
 

@@ -19,16 +19,16 @@ namespace Jabukufo.Audio.Structures.XMA
         /// </summary>
         public int ChunkSize;
 
-        public CHUNK_HEADER(BitContext metaContext, FourCC validTag)
+        public CHUNK_HEADER(BitStream metaStream, FourCC validTag)
         {
             Debug.WriteLine(typeof(CHUNK_HEADER).FullName);
             Debug.Indent();
 
-            this.ChunkTag = metaContext.ReadValue<FourCC>(Endianness.BE);
+            this.ChunkTag = metaStream.ReadValue<FourCC>(Endianness.BE);
             Debug.WriteLine($"{nameof(this.ChunkTag)}: {this.ChunkTag}");
             Assert.Debug(this.ChunkTag == validTag);
 
-            this.ChunkSize = metaContext.ReadValue<int>();
+            this.ChunkSize = metaStream.ReadValue<int>();
             Debug.WriteLine($"{nameof(this.ChunkSize)}: {this.ChunkSize}");
 
             Debug.Unindent();

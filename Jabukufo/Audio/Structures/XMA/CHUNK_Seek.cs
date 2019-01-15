@@ -41,17 +41,17 @@ namespace Jabukufo.Audio.Structures.XMA
         /// </summary>
         public int[] BlockTable;
 
-        public CHUNK_Seek(BitContext metaContext, XMAFILE xmaFile)
+        public CHUNK_Seek(BitStream metaStream, XMAFILE xmaFile)
         {
             Debug.WriteLine(typeof(CHUNK_Seek).FullName);
             Debug.Indent();
 
-            this.Header = new CHUNK_HEADER(metaContext, CHUNK_Seek.Tag);
+            this.Header = new CHUNK_HEADER(metaStream, CHUNK_Seek.Tag);
 
-            this.NumStreams = metaContext.ReadValue<int>();
+            this.NumStreams = metaStream.ReadValue<int>();
             Debug.WriteLine($"{nameof(NumStreams)}: {NumStreams}");
 
-            this.BlockTableCount = metaContext.ReadValue<int>();
+            this.BlockTableCount = metaStream.ReadValue<int>();
             Debug.WriteLine($"{nameof(BlockTableCount)}: {BlockTableCount}");
 
             Debug.WriteLine($"BlockSize: {xmaFile.DataSubchunk.Header.ChunkSize / this.BlockTableCount}");
@@ -62,7 +62,7 @@ namespace Jabukufo.Audio.Structures.XMA
             Debug.Indent();
             for (var i = 0; i < this.BlockTable.Length; i++)
             {
-                this.BlockTable[i] = metaContext.ReadValue<int>();
+                this.BlockTable[i] = metaStream.ReadValue<int>();
                 Debug.WriteLine($"[{i.ToString().PadLeft(this.BlockTableCount.ToString().Length, '0')}]: {this.BlockTable[i]}");
                 Assert.Debug(this.BlockTable[i] % Constants.XMA_SAMPLES_PER_FRAME == 0);
             }

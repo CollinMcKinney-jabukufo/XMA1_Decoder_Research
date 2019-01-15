@@ -138,5 +138,16 @@ namespace Jabukufo.Bits
             this.BaseStream.Write(data, 0, finalLength);
             this.BitOffset += bitCount;
         }
+
+        public BitContext ReadContext(int bitCount)
+        {
+            var buffer = new bool[bitCount];
+
+            for (var b = 0; b < bitCount; b++)
+                buffer[b] = ReadValue<bool>(1);
+
+            var result = new BitContext(buffer);
+            return result;
+        }
     }
 }
