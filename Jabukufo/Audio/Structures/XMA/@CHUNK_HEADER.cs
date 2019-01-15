@@ -19,28 +19,17 @@ namespace Jabukufo.Audio.Structures.XMA
         /// </summary>
         public int ChunkSize;
 
-        /// <summary>
-        /// The offset in bits where this chunk begins (following the <see cref="CHUNK_HEADER"/>).
-        /// <para>
-        /// This is completely abstract and not an actual part of the <see cref="CHUNK_HEADER"/>.
-        /// </para>
-        /// </summary>
-        public int BitOffset { get; }
-
-        public CHUNK_HEADER(BitStream bitStream, FourCC validTag)
+        public CHUNK_HEADER(BitContext metaContext, FourCC validTag)
         {
             Debug.WriteLine(typeof(CHUNK_HEADER).FullName);
             Debug.Indent();
 
-            this.ChunkTag = bitStream.ReadValue<FourCC>(Endianness.BE);
+            this.ChunkTag = metaContext.ReadValue<FourCC>(Endianness.BE);
             Debug.WriteLine($"{nameof(this.ChunkTag)}: {this.ChunkTag}");
             Assert.Debug(this.ChunkTag == validTag);
 
-            this.ChunkSize = bitStream.ReadValue<int>();
+            this.ChunkSize = metaContext.ReadValue<int>();
             Debug.WriteLine($"{nameof(this.ChunkSize)}: {this.ChunkSize}");
-
-            this.BitOffset = bitStream.BitOffset;
-            Debug.WriteLine($"{nameof(this.BitOffset)}: {this.BitOffset}");
 
             Debug.Unindent();
         }

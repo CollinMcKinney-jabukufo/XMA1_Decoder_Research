@@ -64,25 +64,25 @@ namespace Jabukufo.Audio.Structures.XMA
         /// </summary>
         public XMACHANNELMASK ChannelMask;
 
-        public XMASTREAMFORMAT(BitStream xmaStream)
+        public XMASTREAMFORMAT(BitContext metaContext)
         {
             Debug.WriteLine(typeof(XMASTREAMFORMAT).FullName);
             Debug.Indent();
 
-            this.PseudoBytesPerSec = xmaStream.ReadValue<uint>();
+            this.PseudoBytesPerSec = metaContext.ReadValue<uint>();
             Debug.WriteLine($"{nameof(this.PseudoBytesPerSec)}: {this.PseudoBytesPerSec}");
 
-            this.SampleRate = xmaStream.ReadValue<uint>();
+            this.SampleRate = metaContext.ReadValue<uint>();
             Debug.WriteLine($"{nameof(this.SampleRate)}: {this.SampleRate}");
 
-            this.LoopStart = xmaStream.ReadValue<uint>();
+            this.LoopStart = metaContext.ReadValue<uint>();
             Debug.WriteLine($"{nameof(this.LoopStart)}: {this.LoopStart}");
 
-            this.LoopEnd = xmaStream.ReadValue<uint>();
+            this.LoopEnd = metaContext.ReadValue<uint>();
             Debug.WriteLine($"{nameof(this.LoopEnd)}: {this.LoopEnd}");
 
 
-            this.SubframeData = xmaStream.ReadValue<byte>();
+            this.SubframeData = metaContext.ReadValue<byte>();
             Debug.WriteLine($"{nameof(this.SubframeData)}: {this.SubframeData}");
             Debug.WriteLine($"{nameof(this.SubframeEnd)}: {this.SubframeEnd}");
             Debug.WriteLine($"{nameof(this.SubframeSkip)}: {this.SubframeSkip}");
@@ -90,11 +90,11 @@ namespace Jabukufo.Audio.Structures.XMA
             Assert.Debug(this.SubframeSkip >= 0 && this.SubframeSkip <= 4);
 
 
-            this.ChannelCount = xmaStream.ReadValue<byte>();
+            this.ChannelCount = metaContext.ReadValue<byte>();
             Debug.WriteLine($"{typeof(XMASTREAMFORMAT).FullName}.{nameof(this.ChannelCount)}: {this.ChannelCount}");
             Assert.Debug((this.ChannelCount == 1) || (this.ChannelCount == 2));
 
-            this.ChannelMask = xmaStream.ReadValue<XMACHANNELMASK>();
+            this.ChannelMask = metaContext.ReadValue<XMACHANNELMASK>();
             Debug.WriteLine($"{nameof(this.ChannelMask)}.{nameof(this.ChannelMask.Lower)}: {this.ChannelMask.Lower}");
             Debug.WriteLine($"{nameof(this.ChannelMask)}.{nameof(this.ChannelMask.Upper)}: {this.ChannelMask.Upper}");
 

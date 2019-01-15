@@ -13,8 +13,6 @@ namespace Jabukufo.Audio.Structures.XMA
     /// </summary>
     public class XMAPACKET
     {
-        public int BitOffset { get; }
-
         /// <summary>
         /// Number of XMA frames that begin in this packet. 6-bits.
         /// </summary>
@@ -41,17 +39,13 @@ namespace Jabukufo.Audio.Structures.XMA
         /// </summary>
         public XMAFRAME[] XMAFrames;
 
-        public XMAPACKET(BitStream xmaStream, XMAFILE xmaFile)
+        public XMAPACKET(BitContext blockContext, XMAFILE xmaFile)
         {
-            this.BitOffset = xmaStream.BitOffset;
-
             Debug.WriteLine(typeof(XMAPACKET).FullName);
             Debug.Indent();
 
-            var packetHeader = xmaStream.ReadValue<uint>(Endianness.BE);
-            xmaStream.BitOffset = this.BitOffset;
-            Debug.WriteLine($"--Header-Bits: {Convert.ToString(packetHeader, 2).PadLeft(32, '0')}--");
-            Debug.WriteLine($"{nameof(this.BitOffset)}: {this.BitOffset}");
+            var packetContext = blockContext.GetBits(Constants.XMA_BITS_PER_PACKET, false);
+            var packetHeader = packetContext.ReadValue<uint>(Endianness.BE);
 
             // E.g. if the first DWORD of a packet is 0x30107902:
             //
@@ -60,37 +54,62 @@ namespace Jabukufo.Audio.Structures.XMA
             //    |          |         |___________ XMA signature (always 000)
             //    |          |_____________________ First frame starts 527 bits into packet
             //    |________________________________ Packet contains 12 frames
-            this.FrameCount         = xmaStream.ReadValue<byte>(6);
+            this.FrameCount         = (byte)((packetHeader & 0b111111_000000000000000_000_00000000) >> 26);
             Debug.WriteLine($"FrameCount: {this.FrameCount}");
 
-            this.FrameOffsetInBits  = xmaStream.ReadValue<ushort>(15);
+            this.FrameOffsetInBits  = (byte)((packetHeader & 0b000000_111111111111111_000_00000000) >> 11);
             Debug.WriteLine($"FrameOffsetInBits: {this.FrameOffsetInBits}");
 
-            this.PacketMetaData     = xmaStream.ReadValue<byte>(3);
+            this.PacketMetaData     = (byte)((packetHeader & 0b000000_000000000000000_111_00000000) >> 08);
             Debug.WriteLine($"PacketMetaData: {this.PacketMetaData}");
             Assert.Debug(this.PacketMetaData == 0);
 
-            this.PacketSkipCount    = xmaStream.ReadValue<byte>(8);
+            this.PacketSkipCount    = (byte)((packetHeader & 0b000000_000000000000000_000_11111111) >> 00);
             Debug.WriteLine($"PacketSkipCount: {this.PacketSkipCount}");
 
-            //this.PacketData = xmaStream.ReadBytes(Constants.XMA_BITS_PER_PACKET - BitMath.SizeOf<int>());
+            /// TODO: Figure out what's wrong with this `FrameOffsetInBits` offset. Current code assumes offset to be relative to the
+            /// end of the packet header (32 bits into the packet).
+    //        if (this.FrameOffsetInBits != 0)
+    //        {
+    //            var previousFrameBits = packetContext.GetBits(this.FrameOffsetInBits - BitMath.SizeOf<uint>(), false);
+    //            // TODO: add this onto the previous frame
+    //        }
+    //
+    //        var xmaFrames = new List<XMAFRAME> { };
+    //        for (var f = 0; f < this.FrameCount; f++)
+    //        {
+    //            Debug.Write($"{nameof(this.XMAFrames)}[{f}]");
+    //            var frame = new XMAFRAME(packetContext, xmaFile);
+    //            if (frame.FrameLength == 0)
+    //                break;
+    //
+    //            xmaFrames.Add(frame);
+    //        }
+    //        this.XMAFrames = xmaFrames.ToArray();
 
-            var xmaFrames = new List<XMAFRAME> { };
-            xmaStream.BitOffset = this.BitOffset + this.FrameOffsetInBits;
-
-            for (var f = 0; xmaStream.BitOffset < this.BitOffset + Constants.XMA_BITS_PER_PACKET; f++)
-            {
-                Debug.Write($"{nameof(this.XMAFrames)}[{0}]");
-                var frame = new XMAFRAME(xmaStream, xmaFile);
-                if (frame.FrameLength == 0)
-                    break;
-
-                xmaFrames.Add(frame);
-            }
-            this.XMAFrames = xmaFrames.ToArray();
-
-            xmaStream.BitOffset = this.BitOffset + Constants.XMA_BITS_PER_PACKET;
             Debug.Unindent();
+        }
+
+        private static unsafe int GetXmaPacketFrameCount(byte* pPacket)
+        {
+            return (int)(pPacket[0] >> 2);
+        }
+
+        private static unsafe int GetXmaPacketFirstFrameOffsetInBits(byte* pPacket)
+        {
+            return ((int)(pPacket[0] & 0x3) << 13) |
+                   ((int)(pPacket[1]) << 5) |
+                   ((int)(pPacket[2]) >> 3);
+        }
+
+        private static unsafe int GetXmaPacketMetadata(byte* pPacket)
+        {
+            return (int)(pPacket[2] & 0x7);
+        }
+
+        private static unsafe int GetXmaPacketSkipCount(byte* pPacket)
+        {
+            return (int)(pPacket[3]);
         }
     }
 }

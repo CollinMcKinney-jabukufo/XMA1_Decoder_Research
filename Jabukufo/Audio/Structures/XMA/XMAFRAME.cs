@@ -13,8 +13,6 @@ namespace Jabukufo.Audio.Structures.XMA
     /// </summary>
     public class XMAFRAME
     {
-        public int BitOffset { get; }
-
         /// <summary>
         /// Size in bits of the frame's initial LengthInBits field.
         /// </summary>
@@ -41,31 +39,18 @@ namespace Jabukufo.Audio.Structures.XMA
         /// </summary>
         public XMASUBFRAME[] SubFrames = new XMASUBFRAME[Constants.XMA_SUBFRAMES_PER_FRAME];
 
-        public XMAFRAME(BitStream xmaStream, XMAFILE xmaFile)
+        public XMAFRAME(BitContext packetContext, XMAFILE xmaFile)
         {
-            this.BitOffset = xmaStream.BitOffset;
-
             Debug.WriteLine(typeof(XMAFRAME).FullName);
             Debug.Indent();
 
-            var frameHeader = xmaStream.ReadValue<ushort>(Endianness.BE);
-            xmaStream.BitOffset = this.BitOffset;
-            Debug.WriteLine($"--Header-Bits: {Convert.ToString(frameHeader, 2).PadLeft(32, '0')}--");
-            Debug.WriteLine($"{nameof(this.BitOffset)}: {this.BitOffset}");
-
-            this.FrameLength = xmaStream.ReadValue<ushort>(XMAFRAME.XMA_BITS_IN_FRAME_LENGTH_FIELD, Endianness.BE);
+            this.FrameLength = packetContext.ReadValue<ushort>(XMAFRAME.XMA_BITS_IN_FRAME_LENGTH_FIELD, Endianness.BE);
             Debug.WriteLine($"{nameof(this.FrameLength)}: {this.FrameLength}");
 
             if (this.FrameLength == XMA_FINAL_FRAME_MARKER)
                 return;
 
-            var frameData = xmaStream.ReadBytes(this.FrameLength);
-            var tempBits = new BitContext(frameData);
-
-            var underflow = BitMath.CalcUnderflow<byte>(this.FrameLength);
-            this.FrameData = tempBits.GetBits(underflow, this.FrameLength);
-
-            xmaStream.BitOffset = this.BitOffset + this.FrameLength;
+            this.FrameData = packetContext.GetBits(this.FrameLength, false);
             Debug.Unindent();
         }
     }

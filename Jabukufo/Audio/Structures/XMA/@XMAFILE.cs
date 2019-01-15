@@ -15,14 +15,47 @@ namespace Jabukufo.Audio.Structures.XMA
 
         public XMAFILE(byte[] xmaFileData)
         {
-            var xmaStream = new BitStream(xmaFileData);
+            var metaContext = new BitContext(xmaFileData);
 
-            this.RiffSubchunk   = new CHUNK_Riff(xmaStream, this);
-            this.FormatSubchunk = new CHUNK_Format(xmaStream, this);
-            this.DataSubchunk   = new CHUNK_Data(xmaStream, this);
-            this.SeekSubchunk   = new CHUNK_Seek(xmaStream, this);
+            this.RiffSubchunk   = new CHUNK_Riff(metaContext, this);
+            this.FormatSubchunk = new CHUNK_Format(metaContext, this);
+            this.DataSubchunk   = new CHUNK_Data(metaContext, this);
+            this.SeekSubchunk   = new CHUNK_Seek(metaContext, this);
 
             return;
+        }
+
+        public void DecodeBlocks()
+        {
+            this.XMAStreams = new XMASTREAM[this.SeekSubchunk.NumStreams];
+            var blockLength = this.SeekSubchunk.NumStreams * Constants.XMA_BITS_PER_PACKET;
+
+            for (var b = 0; b < this.SeekSubchunk.BlockTableCount; b++)
+            {
+                this.DataSubchunk.XMAContext.BitOffset = b * blockLength;
+                var blockContext = this.DataSubchunk.XMAContext.GetBits(blockLength, false);
+
+                for (var s = 0; s < this.SeekSubchunk.NumStreams; s++)
+                {
+                    Debug.WriteLine($"Decoding First {nameof(XMAPACKET)} In {nameof(XMAStreams)}[{s}]");
+                    Debug.Indent();
+
+                    // Initialize the stream
+                    this.XMAStreams[s] = new XMASTREAM();
+
+                    // Decode the packets belonging to the stream
+                    var skipCount = 0;
+                    while (blockContext.BitOffset < blockContext.BitLength)
+                    {
+                        blockContext.BitOffset += (Constants.XMA_BITS_PER_PACKET * skipCount);
+                        var packet = new XMAPACKET(blockContext, this);
+                        this.XMAStreams[s].XMAPackets.Add(packet);
+                        skipCount = packet.PacketSkipCount;
+                    }
+
+                    Debug.Unindent();
+                }
+            }
         }
 
         public void BeginDecode()
@@ -39,8 +72,8 @@ namespace Jabukufo.Audio.Structures.XMA
                 Debug.WriteLine($"Decoding First {nameof(XMAPACKET)} In {nameof(XMAStreams)}[{s}]");
                 Debug.Indent();
 
-                this.DataSubchunk.XMAData.BitOffset = Constants.XMA_BITS_PER_PACKET * s;
-                var packet = new XMAPACKET(this.DataSubchunk.XMAData, this);
+                this.DataSubchunk.XMAContext.BitOffset = Constants.XMA_BITS_PER_PACKET * s;
+                var packet = new XMAPACKET(this.DataSubchunk.XMAContext, this);
                 this.XMAStreams[s].XMAPackets.Add(packet);
 
                 Debug.Unindent();
@@ -63,21 +96,13 @@ namespace Jabukufo.Audio.Structures.XMA
             var packet = this.XMAStreams[s].XMAPackets[0];
             var skipCount = packet.PacketSkipCount;
 
-            while (this.DataSubchunk.XMAData.BitOffset < this.DataSubchunk.XMAData.BitLength)
+            while (this.DataSubchunk.XMAContext.BitOffset < this.DataSubchunk.XMAContext.BitLength)
             {
-                this.DataSubchunk.XMAData.BitOffset = packet.BitOffset + (Constants.XMA_BITS_PER_PACKET * (skipCount + 1));
+                this.DataSubchunk.XMAContext.BitOffset += (Constants.XMA_BITS_PER_PACKET * skipCount);
 
-                packet = new XMAPACKET(this.DataSubchunk.XMAData, this);
+                packet = new XMAPACKET(this.DataSubchunk.XMAContext, this);
                 this.XMAStreams[s].XMAPackets.Add(packet);
                 skipCount = packet.PacketSkipCount;
-            }
-
-            for (var p = 0; p < this.XMAStreams[s].XMAPackets.Count; p++)
-            {
-                for (var f = 0; f < this.XMAStreams[s].XMAPackets[p].XMAFrames.Length; f++)
-                {
-
-                }
             }
         }
     }

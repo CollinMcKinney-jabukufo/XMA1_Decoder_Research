@@ -52,32 +52,32 @@ namespace Jabukufo.Audio.Structures.XMA
         /// </summary>
         public XMASTREAMFORMAT[] XmaStreams;
 
-        public XMAWAVEFORMAT(BitStream xmaStream)
+        public XMAWAVEFORMAT(BitContext metaContext)
         {
             Debug.WriteLine(typeof(XMAWAVEFORMAT).FullName);
             Debug.Indent();
 
-            this.FormatTag = xmaStream.ReadValue<CompressionCode>();
+            this.FormatTag = metaContext.ReadValue<CompressionCode>();
             Debug.WriteLine($"{nameof(FormatTag)}: {FormatTag}");
             Assert.Debug(this.FormatTag == CompressionCode.XMA);
 
-            this.BitsPerSample = xmaStream.ReadValue<ushort>();
+            this.BitsPerSample = metaContext.ReadValue<ushort>();
             Debug.WriteLine($"{nameof(BitsPerSample)}: {BitsPerSample}");
             Assert.Debug(this.BitsPerSample == Constants.XMA_OUTPUT_SAMPLE_BITS);
 
-            this.EncodeOptions = xmaStream.ReadValue<ushort>();
+            this.EncodeOptions = metaContext.ReadValue<ushort>();
             Debug.WriteLine($"{nameof(EncodeOptions)}: {EncodeOptions}");
 
-            this.LargestSkip = xmaStream.ReadValue<ushort>();
+            this.LargestSkip = metaContext.ReadValue<ushort>();
             Debug.WriteLine($"{nameof(LargestSkip)}: {LargestSkip}");
 
-            this.NumStreams = xmaStream.ReadValue<ushort>();
+            this.NumStreams = metaContext.ReadValue<ushort>();
             Debug.WriteLine($"{nameof(NumStreams)}: {NumStreams}");
 
-            this.LoopCount = xmaStream.ReadValue<byte>();
+            this.LoopCount = metaContext.ReadValue<byte>();
             Debug.WriteLine($"{nameof(LoopCount)}: {LoopCount}");
 
-            this.Version = xmaStream.ReadValue<byte>();
+            this.Version = metaContext.ReadValue<byte>();
             Debug.WriteLine($"{nameof(Version)}: {Version}");
 
             this.XmaStreams = new XMASTREAMFORMAT[this.NumStreams];
@@ -86,7 +86,7 @@ namespace Jabukufo.Audio.Structures.XMA
             for (var i = 0; i < this.XmaStreams.Length; i++)
             {
                 Debug.Write($"[{i.ToString().PadLeft(this.NumStreams.ToString().Length, '0')}] ");
-                this.XmaStreams[i] = new XMASTREAMFORMAT(xmaStream);
+                this.XmaStreams[i] = new XMASTREAMFORMAT(metaContext);
             }
             Debug.Unindent();
 

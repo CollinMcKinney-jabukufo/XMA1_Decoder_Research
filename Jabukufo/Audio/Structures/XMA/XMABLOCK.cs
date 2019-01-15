@@ -13,13 +13,13 @@ namespace Jabukufo.Audio.Structures.XMA
         {
             this.BitOffset = xmaStream.BitOffset;
 
-            Assert.Debug(xmaFile.DataSubchunk.Header.ChunkSize % xmaFile.SeekSubchunk.BlockTableLength == 0);
-            var blockLengthInBytes = xmaFile.DataSubchunk.Header.ChunkSize / xmaFile.SeekSubchunk.BlockTableLength;
+            Assert.Debug(xmaFile.DataSubchunk.Header.ChunkSize % xmaFile.SeekSubchunk.BlockTableCount == 0);
+            var blockLengthInBytes = xmaFile.DataSubchunk.Header.ChunkSize / xmaFile.SeekSubchunk.BlockTableCount;
             Assert.Debug(blockLengthInBytes == Constants.XMA_BYTES_PER_PACKET * xmaFile.FormatSubchunk.XMAWAVEFormat.NumStreams);
 
             var blockLengthInBits = BitMath.BitCount(blockLengthInBytes);
             var blockData = xmaStream.ReadBytes(blockLengthInBits);
-            var blockStream = new BitStream(blockData);
+            var blockContext = new BitContext(blockData);
 
             this.XMAPackets = new XMAPACKET[xmaFile.FormatSubchunk.XMAWAVEFormat.NumStreams];
 
@@ -29,7 +29,7 @@ namespace Jabukufo.Audio.Structures.XMA
             for (var p = 0; p < this.XMAPackets.Length; p++)
             {
                 Debug.Write($"{nameof(this.XMAPackets)}[{p}]");
-                var packet = new XMAPACKET(blockStream, xmaFile);
+                var packet = new XMAPACKET(blockContext, xmaFile);
                 this.XMAPackets[p] = packet;
             }
 
