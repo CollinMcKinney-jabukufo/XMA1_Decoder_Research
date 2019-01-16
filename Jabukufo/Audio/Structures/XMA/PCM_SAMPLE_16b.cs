@@ -1,7 +1,9 @@
-﻿namespace Jabukufo.Audio.Structures.XMA
+﻿using System.Runtime.InteropServices;
+
+namespace Jabukufo.Audio.Structures.XMA
 {
-    public struct PCM_SAMPLE_16b
-    {
-        private readonly ushort Value;
-    }
+    /// <summary>
+    /// Probably better to just use a ushort. Using this for now because the type makes it obvious.
+    /// </summary>
+    public enum PCM_SAMPLE_16b : ushort { }
 }

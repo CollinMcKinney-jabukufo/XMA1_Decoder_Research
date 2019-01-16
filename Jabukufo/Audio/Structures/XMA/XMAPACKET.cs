@@ -37,15 +37,15 @@ namespace Jabukufo.Audio.Structures.XMA
         /// <summary>
         /// XMA encoded data.
         /// </summary>
-        public XMAFRAME[] XMAFrames;
+        public BitContext PacketContext;
 
-        public XMAPACKET(BitContext blockContext, XMAFILE xmaFile)
+        public XMAPACKET(BitContext packetContext, XMAFILE xmaFile)
         {
             Debug.WriteLine(typeof(XMAPACKET).FullName);
             Debug.Indent();
 
-            var packetContext = blockContext.GetBits(Constants.XMA_BITS_PER_PACKET, false);
-            var packetHeader = packetContext.ReadValue<int>(Endianness.LE_MSB);
+            this.PacketContext = packetContext;
+            var packetHeader = this.PacketContext.ReadValue<int>(Endianness.LE_MSB);
 
             // E.g. if the first DWORD of a packet is 0x30107902:
             //
@@ -67,25 +67,25 @@ namespace Jabukufo.Audio.Structures.XMA
             this.PacketSkipCount    = (packetHeader >> 00) & 0b11111111;
             Debug.WriteLine($"PacketSkipCount: {this.PacketSkipCount}");
 
-            /// TODO: Figure out what's wrong with this `FrameOffsetInBits` offset. Current code assumes offset to be relative to the
-            /// end of the packet header (32 bits into the packet).
-    //        if (this.FrameOffsetInBits != 0)
-    //        {
-    //            var previousFrameBits = packetContext.GetBits(this.FrameOffsetInBits - BitMath.SizeOf<uint>(), false);
-    //            // TODO: add this onto the previous frame
-    //        }
-    //
-    //        var xmaFrames = new List<XMAFRAME> { };
-    //        for (var f = 0; f < this.FrameCount; f++)
-    //        {
-    //            Debug.Write($"{nameof(this.XMAFrames)}[{f}]");
-    //            var frame = new XMAFRAME(packetContext, xmaFile);
-    //            if (frame.FrameLength == 0)
-    //                break;
-    //
-    //            xmaFrames.Add(frame);
-    //        }
-    //        this.XMAFrames = xmaFrames.ToArray();
+        //    /// TODO: Figure out what's wrong with this `FrameOffsetInBits` offset. Current code assumes offset to be relative to the
+        //    /// end of the packet header (32 bits into the packet).
+        //    if (this.FrameOffsetInBits != 0)
+        //    {
+        //        var previousFrameBits = packetContext.GetBits(this.FrameOffsetInBits - BitMath.SizeOf<uint>(), false);
+        //        // TODO: add this onto the previous frame
+        //    }
+        //
+        //    var xmaFrames = new List<XMAFRAME> { };
+        //    for (var f = 0; f < this.FrameCount; f++)
+        //    {
+        //        Debug.Write($"{nameof(this.XMAFrames)}[{f}]");
+        //        var frame = new XMAFRAME(packetContext, xmaFile);
+        //        if (frame.FrameLength == 0)
+        //            break;
+        //
+        //        xmaFrames.Add(frame);
+        //    }
+        //    this.XMAFrames = xmaFrames.ToArray();
 
             Debug.Unindent();
         }

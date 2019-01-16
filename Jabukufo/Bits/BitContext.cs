@@ -56,9 +56,10 @@ namespace Jabukufo.Bits
                 this.Bits.Insert(index + b, srcContext.Bits[b]);
         }
 
-        public void Concat(BitContext srcContext)
+        public void Append(BitContext srcContext)
         {
-            this.Bits.Concat(srcContext.Bits);
+            foreach (var bit in srcContext.Bits)
+                this.Bits.Add(bit);
         }
 
         public unsafe T[] ToArray<T>(Endianness endianness = Endianness.LE_LSB) where T : unmanaged

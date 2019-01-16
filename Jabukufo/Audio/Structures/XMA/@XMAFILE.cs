@@ -1,5 +1,6 @@
 ﻿using Jabukufo.Bits;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Jabukufo.Audio.Structures.XMA
@@ -10,8 +11,6 @@ namespace Jabukufo.Audio.Structures.XMA
         public CHUNK_Format FormatSubchunk;
         public CHUNK_Data DataSubchunk;
         public CHUNK_Seek SeekSubchunk;
-
-        public XMASTREAM[] XMAStreams;
 
         public XMAFILE(byte[] xmaFileData)
         {
@@ -25,36 +24,73 @@ namespace Jabukufo.Audio.Structures.XMA
             return;
         }
 
-        public void DecodeBlocks()
+        public readonly List<XMAPACKET> XMAPackets = new List<XMAPACKET> { };
+        public readonly List<XMAFRAME> XMAFrames = new List<XMAFRAME> { };
+        public void BeginDecode()
         {
-            this.XMAStreams = new XMASTREAM[this.SeekSubchunk.NumStreams];
-            var blockLength = this.SeekSubchunk.NumStreams * Constants.XMA_BITS_PER_PACKET;
+            this.DecodePackets();
+            this.DecodeFrames();
 
-            for (var b = 0; b < this.SeekSubchunk.BlockTableCount; b++)
+            ;
+        }
+
+        private void DecodePackets()
+        {
+            for (var p = 0; p < (this.DataSubchunk.XMADataStream.BitLength / Constants.XMA_BITS_PER_PACKET); p++)
             {
-                this.DataSubchunk.XMADataStream.BitOffset = b * blockLength;
-                var blockContext = this.DataSubchunk.XMADataStream.ReadContext(blockLength);
+                Debug.WriteLine($"Decoding {nameof(XMAPACKET)} [{p}]");
+                Debug.Indent();
 
-                for (var s = 0; s < this.SeekSubchunk.NumStreams; s++)
+                var packetContext = this.DataSubchunk.XMADataStream.ReadContext(Constants.XMA_BITS_PER_PACKET);
+                var packet = new XMAPACKET(packetContext, this);
+                this.XMAPackets.Add(packet);
+
+                Debug.Unindent();
+            }
+        }
+
+        private void DecodeFrames()
+        {
+            foreach (var packet in this.XMAPackets)
+            {
+                packet.PacketContext.BitOffset = Constants.XMA_PACKET_HEADER_BITS;
+
+                if (packet.FrameOffsetInBits != 0 && this.XMAFrames.Count != 0)
                 {
-                    Debug.WriteLine($"Decoding First {nameof(XMAPACKET)} In {nameof(XMAStreams)}[{s}]");
+                    Debug.WriteLine($"Adding bits to {nameof(XMAFRAME)} [{this.XMAFrames.Count - 1}]");
                     Debug.Indent();
 
-                    // Initialize the stream
-                    this.XMAStreams[s] = new XMASTREAM();
+                    var previousFrameBits = packet.PacketContext.GetBits(packet.FrameOffsetInBits, false);
+                    this.XMAFrames[this.XMAFrames.Count - 1].FrameData.Append(previousFrameBits);
 
-                    // Decode the packets belonging to the stream
-                    var skipCount = 0;
-                    while (blockContext.BitOffset < blockContext.BitLength)
-                    {
-                        blockContext.BitOffset += (Constants.XMA_BITS_PER_PACKET * skipCount);
-                        var packet = new XMAPACKET(blockContext, this);
-                        this.XMAStreams[s].XMAPackets.Add(packet);
-                        skipCount = packet.PacketSkipCount;
-                    }
-
+                    Debug.WriteLine($"Add Amount: {previousFrameBits.BitLength}");
+                    Debug.WriteLine($"Final FrameLength: {this.XMAFrames[this.XMAFrames.Count - 1].FrameData.BitLength}");
                     Debug.Unindent();
                 }
+
+                while (this.XMAFrames.Count < packet.FrameCount)
+                {
+                    Debug.WriteLine($"Getting bits for {nameof(XMAFRAME)}");
+                    Debug.Indent();
+
+                    var frame = new XMAFRAME(packet.PacketContext, this);
+                    this.XMAFrames.Add(frame);
+
+                    Debug.WriteLine($"Initial FrameLength: {this.XMAFrames[this.XMAFrames.Count - 1].FrameData.BitLength}");
+                    Debug.Unindent();
+                }
+            }
+
+            for (var f = 0; f < this.XMAFrames.Count; f++)
+            {
+                Debug.WriteLine($"Decoding {nameof(XMAFRAME)} [{f}]");
+                Debug.Indent();
+
+                ///
+                /// Frame decoding here
+                ///
+
+                Debug.Unindent();
             }
         }
     }

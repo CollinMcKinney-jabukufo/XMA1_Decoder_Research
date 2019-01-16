@@ -44,13 +44,16 @@ namespace Jabukufo.Audio.Structures.XMA
             Debug.WriteLine(typeof(XMAFRAME).FullName);
             Debug.Indent();
 
-            this.FrameLength = packetContext.ReadValue<ushort>(XMAFRAME.XMA_BITS_IN_FRAME_LENGTH_FIELD, Endianness.BE);
+            var frameHeader = packetContext.ReadValue<ushort>(Endianness.LE_MSB);
+            packetContext.BitOffset -= 1;
+            this.FrameLength = (ushort)(frameHeader >> 1);
             Debug.WriteLine($"{nameof(this.FrameLength)}: {this.FrameLength}");
 
             if (this.FrameLength == XMA_FINAL_FRAME_MARKER)
                 return;
 
-            this.FrameData = packetContext.GetBits(this.FrameLength, false);
+            this.FrameData = packetContext.GetBits(this.FrameLength - XMA_BITS_IN_FRAME_LENGTH_FIELD, false);
+            
             Debug.Unindent();
         }
     }

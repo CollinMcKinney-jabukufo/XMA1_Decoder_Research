@@ -55,7 +55,7 @@ namespace Test
             Console.WriteLine($"------------- Decoding XMAData ---------------------------");
             Console.ForegroundColor = baseColor;
 
-            xmaFile.DecodeBlocks();
+            xmaFile.BeginDecode();
 
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine($"------------- XMAData Decoding Complete ------------------");
