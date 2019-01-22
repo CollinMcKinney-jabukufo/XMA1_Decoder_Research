@@ -81,7 +81,6 @@
     <Compile Include="Common\Bounds.cs" />
     <Compile Include="Common\Endianness.cs" />
     <Compile Include="Common\FourCC.cs" />
-    <Compile Include="Common\MetaData.cs" />
     <Compile Include="Extensions\ByteArrayExtensions.cs" />
     <Compile Include="Extensions\SystemDiagnostics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
