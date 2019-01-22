@@ -8,15 +8,16 @@
             {
                 if (exception is null)
                     exception = new Exception();
-                throw exception;
+                throw null;
             }
         }
 
-#if DEBUG
+        [Conditional("DEBUG")]
         public static void Debug(bool condition, Exception exception = null)
-#else
+            => Assert.Always(condition, exception);
+
+        [Conditional("RELEASE")]
         public static void Release(bool condition, Exception exception = null)
-#endif
             => Assert.Always(condition, exception);
     }
 }

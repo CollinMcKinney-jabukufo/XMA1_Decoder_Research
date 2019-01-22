@@ -1,5 +1,6 @@
 ﻿using Jabukufo.Bits;
 using Jabukufo.Common;
+using System;
 using System.Diagnostics;
 
 namespace Jabukufo.Audio.Structures.XMA

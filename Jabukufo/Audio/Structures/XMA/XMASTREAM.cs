@@ -4,6 +4,6 @@ namespace Jabukufo.Audio.Structures.XMA
 {
     public class XMASTREAM
     {
-        public List<XMAPACKET> XMAPackets = new List<XMAPACKET> { };
+        public List<XMAFRAME> XMAFrames = new List<XMAFRAME> { };
     }
 }

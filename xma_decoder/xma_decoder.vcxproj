@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compat\w32pthreads.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="config_lin.h" />
+    <ClInclude Include="config_win.h" />
+    <ClInclude Include="libavcodec\avcodec.h" />
+    <ClInclude Include="libavcodec\avfft.h" />
+    <ClInclude Include="libavcodec\dct.h" />
+    <ClInclude Include="libavcodec\dct32.h" />
+    <ClInclude Include="libavcodec\fft.h" />
+    <ClInclude Include="libavcodec\get_bits.h" />
+    <ClInclude Include="libavcodec\internal.h" />
+    <ClInclude Include="libavcodec\mathops.h" />
+    <ClInclude Include="libavcodec\put_bits.h" />
+    <ClInclude Include="libavcodec\rdft.h" />
+    <ClInclude Include="libavcodec\sinewin.h" />
+    <ClInclude Include="libavcodec\sinewin_tablegen.h" />
+    <ClInclude Include="libavcodec\tableprint.h" />
+    <ClInclude Include="libavcodec\wma.h" />
+    <ClInclude Include="libavcodec\wmadata.h" />
+    <ClInclude Include="libavcodec\wmaprodata.h" />
+    <ClInclude Include="libavcodec\wma_common.h" />
+    <ClInclude Include="libavcodec\wma_freqs.h" />
+    <ClInclude Include="libavcodec\x86\mathops.h" />
+    <ClInclude Include="libavcodec\xma2dec.h" />
+    <ClInclude Include="libavutil\atomic.h" />
+    <ClInclude Include="libavutil\atomic_win32.h" />
+    <ClInclude Include="libavutil\attributes.h" />
+    <ClInclude Include="libavutil\avassert.h" />
+    <ClInclude Include="libavutil\avconfig.h" />
+    <ClInclude Include="libavutil\avstring.h" />
+    <ClInclude Include="libavutil\avutil.h" />
+    <ClInclude Include="libavutil\bswap.h" />
+    <ClInclude Include="libavutil\buffer.h" />
+    <ClInclude Include="libavutil\buffer_internal.h" />
+    <ClInclude Include="libavutil\channel_layout.h" />
+    <ClInclude Include="libavutil\common.h" />
+    <ClInclude Include="libavutil\cpu.h" />
+    <ClInclude Include="libavutil\cpu_internal.h" />
+    <ClInclude Include="libavutil\dict.h" />
+    <ClInclude Include="libavutil\error.h" />
+    <ClInclude Include="libavutil\eval.h" />
+    <ClInclude Include="libavutil\float_dsp.h" />
+    <ClInclude Include="libavutil\frame.h" />
+    <ClInclude Include="libavutil\imgutils.h" />
+    <ClInclude Include="libavutil\internal.h" />
+    <ClInclude Include="libavutil\intfloat.h" />
+    <ClInclude Include="libavutil\intreadwrite.h" />
+    <ClInclude Include="libavutil\libm.h" />
+    <ClInclude Include="libavutil\log.h" />
+    <ClInclude Include="libavutil\macros.h" />
+    <ClInclude Include="libavutil\mathematics.h" />
+    <ClInclude Include="libavutil\mem.h" />
+    <ClInclude Include="libavutil\opt.h" />
+    <ClInclude Include="libavutil\pixdesc.h" />
+    <ClInclude Include="libavutil\pixfmt.h" />
+    <ClInclude Include="libavutil\rational.h" />
+    <ClInclude Include="libavutil\samplefmt.h" />
+    <ClInclude Include="libavutil\thread.h" />
+    <ClInclude Include="libavutil\timer.h" />
+    <ClInclude Include="libavutil\x86\asm.h" />
+    <ClInclude Include="libavutil\x86\emms.h" />
+    <ClInclude Include="libavutil\x86\timer.h" />
+    <ClInclude Include="version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="libavcodec\allcodecs.c" />
+    <ClCompile Include="libavcodec\avfft.c" />
+    <ClCompile Include="libavcodec\dct.c" />
+    <ClCompile Include="libavcodec\rdft.c" />
+    <ClCompile Include="libavcodec\sinewin.c" />
+    <ClCompile Include="libavcodec\sinewin_tablegen.c" />
+    <ClCompile Include="libavcodec\wma.c" />
+    <ClCompile Include="libavcodec\wma_common.c" />
+    <ClCompile Include="libavcodec\wma_freqs.c" />
+    <ClCompile Include="libavcodec\xma2dec.c" />
+    <ClCompile Include="libavutil\atomic.c" />
+    <ClCompile Include="libavutil\avstring.c" />
+    <ClCompile Include="libavutil\buffer.c" />
+    <ClCompile Include="libavutil\channel_layout.c" />
+    <ClCompile Include="libavutil\cpu.c" />
+    <ClCompile Include="libavutil\dict.c" />
+    <ClCompile Include="libavutil\error.c" />
+    <ClCompile Include="libavutil\eval.c" />
+    <ClCompile Include="libavutil\float_dsp.c" />
+    <ClCompile Include="libavutil\frame.c" />
+    <ClCompile Include="libavutil\imgutils.c" />
+    <ClCompile Include="libavutil\log.c" />
+    <ClCompile Include="libavutil\mathematics.c" />
+    <ClCompile Include="libavutil\mem.c" />
+    <ClCompile Include="libavutil\opt.c" />
+    <ClCompile Include="libavutil\pixdesc.c" />
+    <ClCompile Include="libavutil\rational.c" />
+    <ClCompile Include="libavutil\samplefmt.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libavutil\x86\emms.asm" />
+    <None Include="libavutil\x86\x86inc.asm" />
+    <None Include="libavutil\x86\x86util.asm" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{BA661823-065E-41BB-A9B3-458AC139A2B4}</ProjectGuid>
+    <RootNamespace>xmadecoder</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;_CRT_SUPPRESS_RESTRICT;FF_API_WITHOUT_PREFIX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

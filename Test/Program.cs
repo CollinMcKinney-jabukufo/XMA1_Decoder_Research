@@ -51,19 +51,6 @@ namespace Test
 
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine($"------------- MetaData Serializing Complete --------------");
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine($"------------- Decoding XMAData ---------------------------");
-            Console.ForegroundColor = baseColor;
-
-            xmaFile.BeginDecode();
-
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine($"------------- XMAData Decoding Complete ------------------");
-
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine($"\nDecoding-Info-Ouput for larger XMA-files may overflow the Console Buffer...");
-            Console.WriteLine($"All output is also written to the `output` window in VisualStudio via. `Debug.Listeners`");
-            Console.ForegroundColor = baseColor;
         }
     }
 }

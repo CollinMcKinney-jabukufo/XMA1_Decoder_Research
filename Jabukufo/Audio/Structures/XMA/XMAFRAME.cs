@@ -44,9 +44,23 @@ namespace Jabukufo.Audio.Structures.XMA
             Debug.WriteLine(typeof(XMAFRAME).FullName);
             Debug.Indent();
 
+            ///
+            /// TODO: Before reading the frame length, check how many bits are left in the packet, if it's less than 16
+            /// only read that amount in, set frame length to -1, and return early.
+            /// 
+            /// Then in the next packet when we come back to this frame, read (16 - FrameData.BitLingth) bits and 
+            /// load the actual FrameLength.
+            /// 
+            /// Finally, read the appropriate amount of bits to complete the frame.
+            ///
+
+            // TODO: Something causes bits to be misplaced if only 15-bits are read instead of 16;
+            // currently reading 16, then moving the BitOffset back one, the shifting the result by 1 to make up for it.
+            // Frame lengths seem to commonly be within the 300-600 range; may change depending on encoding options.
             var frameHeader = packetContext.ReadValue<ushort>(Endianness.LE_MSB);
             packetContext.BitOffset -= 1;
             this.FrameLength = (ushort)(frameHeader >> 1);
+
             Debug.WriteLine($"{nameof(this.FrameLength)}: {this.FrameLength}");
 
             if (this.FrameLength == XMA_FINAL_FRAME_MARKER)
