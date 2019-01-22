@@ -219,6 +219,15 @@
     <ClInclude Include="libavcodec\dct32.h">
       <Filter>libavcodec</Filter>
     </ClInclude>
+    <ClInclude Include="libavutil\intmath.h">
+      <Filter>libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="libavutil\x86\bswap.h">
+      <Filter>libavutil\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="libavutil\x86\intreadwrite.h">
+      <Filter>libavutil\x86</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libavcodec\allcodecs.c">
@@ -304,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="libavcodec\dct.c">
       <Filter>libavcodec</Filter>
+    </ClCompile>
+    <ClCompile Include="libavutil\intmath.c">
+      <Filter>libavutil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
